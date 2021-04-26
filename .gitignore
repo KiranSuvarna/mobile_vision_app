@@ -10,7 +10,7 @@
 .svn/
 
 # IntelliJ related
-*.iml
+*.imln
 *.ipr
 *.iws
 .idea/
