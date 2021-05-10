@@ -10,7 +10,6 @@ class Main extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: "Home Screen",
-      //theme: _theme,
       home: PickImage(),
     );
   }
@@ -22,15 +21,12 @@ class PickImage extends StatefulWidget {
 }
 
 class PickImageState extends State<PickImage> {
-  String _imagePath = "";
+  File _image;
   ImagePicker _imagePicker = new ImagePicker();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Mobile Vision"),
-      ),
       body: Container(
         width: double.infinity,
         height: double.infinity,
@@ -42,73 +38,97 @@ class PickImageState extends State<PickImage> {
               margin: const EdgeInsets.all(20),
               color: Colors.blue,
               elevation: 10.0,
-              child: InkWell(
-                splashColor: Colors.grey.withAlpha(100),
-                onTap: () async {
-                  try {
-                    PickedFile pickedFile = await _imagePicker.getImage(
-                        source: ImageSource.gallery);
-                    _imagePath = File(pickedFile.path).path;
-                    if (_imagePath != "") {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => DisplayPictureScreen(
-                            // Pass the automatically generated path to
-                            // the DisplayPictureScreen widget.
-                            imagePath: _imagePath,
-                          ),
-                        ),
-                      );
-                    }
-                  } catch (e) {
-                    print(e);
-                  }
-                },
-                child: const SizedBox(
-                  width: 400,
-                  height: 200,
-                  child: Center(
-                    child: Icon(Icons.file_upload,
-                        size: 75.0, color: Colors.white),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  InkWell(
+                    splashColor: Colors.white.withAlpha(100),
+                    onTap: () async {
+                      try {
+                        PickedFile pickedFile = await _imagePicker.getImage(
+                            source: ImageSource.gallery);
+                        _image = File(pickedFile.path);
+                        if (_image != null) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => DisplayPictureScreen(
+                                image: _image,
+                              ),
+                            ),
+                          );
+                        }
+                      } catch (e) {
+                        throw Exception(
+                            "Failed to pick the file. Reason" + e.toString());
+                      }
+                    },
+                    child: const SizedBox(
+                      width: 400,
+                      height: 200,
+                      child: Center(
+                        child: Icon(Icons.file_upload,
+                            size: 75.0, color: Colors.white),
+                      ),
+                    ),
                   ),
-                ),
+                  ListTile(
+                    leading: Icon(
+                      Icons.upload_file,
+                      color: Colors.white,
+                    ),
+                    title: Text(
+                      'Tap to select an Image',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ],
               ),
             ),
             Card(
               margin: const EdgeInsets.all(20),
               color: Colors.blue,
               elevation: 10.0,
-              child: InkWell(
-                splashColor: Colors.grey.withAlpha(100),
-                onTap: () async {
-                  try {
-                    PickedFile pickedFile =
-                        await _imagePicker.getImage(source: ImageSource.camera);
-                    _imagePath = File(pickedFile.path).path;
-                    if (_imagePath != "") {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => DisplayPictureScreen(
-                            // Pass the automatically generated path to
-                            // the DisplayPictureScreen widget.
-                            imagePath: _imagePath,
-                          ),
-                        ),
-                      );
-                    }
-                  } catch (e) {
-                    print(e);
-                  }
-                },
-                child: const SizedBox(
-                  width: 400,
-                  height: 200,
-                  child: Center(
-                    child: Icon(Icons.camera, size: 75.0, color: Colors.white),
+              child: Column(
+                children: [
+                  InkWell(
+                    splashColor: Colors.grey.withAlpha(100),
+                    onTap: () async {
+                      try {
+                        PickedFile pickedFile = await _imagePicker.getImage(
+                            source: ImageSource.camera);
+                        _image = File(pickedFile.path);
+                        if (_image != null) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => DisplayPictureScreen(
+                                image: _image,
+                              ),
+                            ),
+                          );
+                        }
+                      } catch (e) {
+                        print(e);
+                      }
+                    },
+                    child: const SizedBox(
+                      width: 400,
+                      height: 200,
+                      child: Center(
+                        child:
+                            Icon(Icons.camera, size: 75.0, color: Colors.white),
+                      ),
+                    ),
                   ),
-                ),
+                  ListTile(
+                    leading: Icon(Icons.camera, color: Colors.white),
+                    title: Text(
+                      'Tap to capture an Image',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
@@ -117,17 +137,3 @@ class PickImageState extends State<PickImage> {
     );
   }
 }
-
-// Future<void> _initCamera(BuildContext context) async {
-//   WidgetsFlutterBinding.ensureInitialized();
-//   final cameras = await availableCameras();
-//   final firstCamera = cameras.first;
-
-//   return MaterialApp(
-//     theme: ThemeData.dark(),
-//     home: TakePictureScreen(
-//       // Pass the appropriate camera to the TakePictureScreen widget.
-//       camera: firstCamera,
-//     ),
-//   );
-// }
