@@ -25,7 +25,7 @@ class ResponseData {
 class Data {
   List<String> texts;
   List<String> labels;
-  List<String> faces;
+  List<Map<String, dynamic>> faces;
   List<Object> logos;
 
   Data({this.texts, this.labels, this.faces, this.logos});
@@ -40,7 +40,7 @@ class Data {
     }
 
     if (json["Faces"] != null) {
-      faces = json['Faces'].cast<String>();
+      faces = json['Faces'].cast<Map<String, dynamic>>();
     }
 
     if (json["Logos"] != null) {

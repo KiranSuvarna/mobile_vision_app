@@ -25,7 +25,7 @@ class _ResponseIndexState extends State<ResponseIndex> {
 
       int length = await image.length();
 
-      var uri = Uri.parse("https://789ba48921a3.ngrok.io/v1?op=vision");
+      var uri = Uri.parse("https://a1a0aebfa9a7.ngrok.io/v1?op=vision");
 
       var request = new http.MultipartRequest("POST", uri);
 
@@ -91,7 +91,7 @@ class _ResponseIndexState extends State<ResponseIndex> {
                                 onTap: () {
                                   switch (index) {
                                     case 0:
-                                      if (visionData.data.labels.isNotEmpty &&
+                                      if (visionData.data.labels != null &&
                                           visionData.data.labels.length > 0) {
                                         _navigate(
                                             listLabels[index][0],
@@ -135,9 +135,50 @@ class _ResponseIndexState extends State<ResponseIndex> {
                                     case 2:
                                       if (visionData.data.faces != null &&
                                           visionData.data.faces.length > 0) {
+                                        var faces = new StringBuffer();
+                                        for (int i = 0;
+                                            i < visionData.data.faces.length;
+                                            i++) {
+                                          faces.write("\nFace" +
+                                              " " +
+                                              (i + 1).toString() +
+                                              "\n");
+
+                                          visionData.data.faces[i]
+                                              .forEach((key, value) {
+                                            switch (value) {
+                                              case 5:
+                                                faces.write(key +
+                                                    ": " +
+                                                    "VERY_LIKELY\n");
+                                                break;
+                                              case 4:
+                                                faces.write(
+                                                    key + ": " + "LIKELY\n");
+                                                break;
+                                              case 3:
+                                                faces.write(
+                                                    key + ": " + "POSSIBLE\n");
+                                                break;
+                                              case 2:
+                                                faces.write(
+                                                    key + ": " + "UNLIKELY\n");
+                                                break;
+                                              case 1:
+                                                faces.write(key +
+                                                    ": " +
+                                                    "VERY_UNLIKELY\n");
+                                                break;
+                                              default:
+                                                faces.write(
+                                                    key + ": " + "UNKNOWN\n");
+                                                break;
+                                            }
+                                          });
+                                        }
                                         _navigate(
                                             listLabels[index][0],
-                                            visionData.data.faces.join(" "),
+                                            faces.toString(),
                                             listLabels[index][1]);
                                       } else {
                                         return ScaffoldMessenger.of(context)
