@@ -6,6 +6,7 @@ import 'dart:convert';
 
 import 'package:mobile_vision/models/common.dart';
 import 'package:mobile_vision/pages/responseViewer.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class ResponseIndex extends StatefulWidget {
   final File image;
@@ -25,7 +26,7 @@ class _ResponseIndexState extends State<ResponseIndex> {
 
       int length = await image.length();
 
-      var uri = Uri.parse("https://a1a0aebfa9a7.ngrok.io/v1?op=vision");
+      var uri = Uri.parse(env['VISION_URL']);
 
       var request = new http.MultipartRequest("POST", uri);
 

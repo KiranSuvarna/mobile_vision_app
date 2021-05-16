@@ -2,8 +2,12 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'pages/imageViewer.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart' as DotEnv;
 
-void main() => runApp(Main());
+void main() async {
+  await DotEnv.load(fileName: ".env");
+  runApp(Main());
+}
 
 class Main extends StatelessWidget {
   @override
